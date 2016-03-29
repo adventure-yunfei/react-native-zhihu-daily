@@ -1,0 +1,30 @@
+{
+  "name": "reactnative",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "node node_modules/react-native/local-cli/cli.js start",
+    "eslint": "eslint ."
+  },
+  "dependencies": {
+    "axios": "^0.9.1",
+    "color": "^0.11.1",
+    "immutable": "^3.7.6",
+    "lodash": "^4.6.1",
+    "promise-aplus": "^1.0.0",
+    "react": "^0.14.7",
+    "react-addons-shallow-compare": "^0.14.7",
+    "react-native": "^0.22.2",
+    "react-native-looped-carousel": "0.0.9",
+    "react-native-material-kit": "^0.3.0",
+    "react-redux": "^4.4.1",
+    "redux": "^3.3.1",
+    "redux-logger": "^2.6.1",
+    "yfjs": "git+ssh://git@github.com/adventure-yunfei/yfjs.git#master"
+  },
+  "devDependencies": {
+    "babel-eslint": "^5.0.1",
+    "eslint": "^1.10.3",
+    "eslint-plugin-react": "^4.2.3"
+  }
+}

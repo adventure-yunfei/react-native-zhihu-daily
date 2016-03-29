@@ -1,0 +1,6 @@
+{
+  "extends": "../js-common/.eslintrc",
+  "rules": {
+    "no-use-before-define": 0 // react-native 到处充斥styles后置, 禁用此条规则
+  }
+}
