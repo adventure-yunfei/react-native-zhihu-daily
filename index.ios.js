@@ -29,4 +29,4 @@ class reactnative extends Component {
     }
 }
 
-AppRegistry.registerComponent('reactnative', () => reactnative);
+AppRegistry.registerComponent('ReactNativeZhihuDaily', () => reactnative);
