@@ -4,4 +4,8 @@ export const
     TRANSPARENT = 'transparent',
     White = '#FFFFFF',
     Dark = '#555',
-    {Blue, Grey, BlueGrey} = MKColor;
+    {Blue, Grey, BlueGrey} = MKColor,
+
+    TextDefault = Dark,
+    TextLight = '#888',
+    Border = '#D8D7DC';

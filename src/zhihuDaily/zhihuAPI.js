@@ -4,7 +4,7 @@ import {formatDate} from '../date-format';
 const ZhihuAPIBase = 'http://news-at.zhihu.com/api/4';
 const getZhihu = apiSubpath => request(ZhihuAPIBase + apiSubpath);
 
-export const ANCHOR_DATE_FORMAT = 'yyyyMMdd';
+const ANCHOR_DATE_FORMAT = 'yyyyMMdd';
 
 /**
 {
@@ -33,7 +33,31 @@ export const ANCHOR_DATE_FORMAT = 'yyyyMMdd';
     ]
 }
 */
-export const getLatestArticles = () => getZhihu('/news/latest');
+const getLatestArticles = () => getZhihu('/news/latest');
+
+
+/*
+ {
+ date: "20131118",
+ stories: [
+ {
+ title: "深夜食堂 · 我的张曼妮",
+ ga_prefix: "111822",
+ images: [
+ "http://p4.zhimg.com/7b/c8/7bc8ef5947b069513c51e4b9521b5c82.jpg"
+ ],
+ type: 0,
+ id: 1747159
+ },
+ ...
+ ]
+ }
+ */
+const getDailyArticles = date => {
+    const nextDate = new Date(date);
+    nextDate.setDate(nextDate.getDate() + 1);
+    return getZhihu(`/news/before/${formatDate(nextDate, ANCHOR_DATE_FORMAT)}`);
+};
 
 
 /*
@@ -64,28 +88,63 @@ export const getLatestArticles = () => getZhihu('/news/latest');
     ]
 }
 */
-export const getArticle = articleId => getZhihu(`/news/${articleId}`);
+const getArticle = articleId => getZhihu(`/news/${articleId}`);
 
 
 /*
 {
-    date: "20131118",
-    stories: [
+    "long_comments": 0,
+    "popularity": 161,
+    "short_comments": 19,
+    "comments": 19,
+}
+*/
+const getArticleExtra = articleId => getZhihu(`/story-extra/${articleId}`);
+
+
+/*
+{
+    "comments": [
         {
-            title: "深夜食堂 · 我的张曼妮",
-            ga_prefix: "111822",
-            images: [
-                "http://p4.zhimg.com/7b/c8/7bc8ef5947b069513c51e4b9521b5c82.jpg"
-            ],
-            type: 0,
-            id: 1747159
+            "author": "EleganceWorld",
+            "id": 545442,
+            "content": "上海到济南，无尽的猪排盖饭… （后略）",
+            "likes": 0,
+            "time": 1413589303,
+            "avatar": "http://pic2.zhimg.com/1f76e6a25_im.jpg"
         },
         ...
     ]
 }
 */
-export const getDailyArticles = date => {
-    const nextDate = new Date(date);
-    nextDate.setDate(nextDate.getDate() + 1);
-    return getZhihu(`/news/before/${formatDate(nextDate, ANCHOR_DATE_FORMAT)}`);
+const getArticleLongComments = articleId => getZhihu(`/story/${articleId}/long-comments`);
+
+
+/*
+{
+    "comments": [
+        {
+            "author": "Xiaole说",
+            "id": 545721,
+            "content": "就吃了个花生米，呵呵",
+            "likes": 0,
+            "time": 1413600071,
+            "avatar": "http://pic1.zhimg.com/c41f035ab_im.jpg"
+        },
+        ...
+    ]
+}
+*/
+const getArticleShortComments = articleId => getZhihu(`/story/${articleId}/short-comments`);
+
+export {
+    ANCHOR_DATE_FORMAT,
+
+    getLatestArticles,
+    getDailyArticles,
+
+    getArticle,
+    getArticleExtra,
+    getArticleLongComments,
+    getArticleShortComments
 };

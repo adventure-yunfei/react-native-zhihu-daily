@@ -1,10 +1,10 @@
 import React, {
-    Component,
     StyleSheet,
     Navigator
 } from 'react-native';
 import {Provider} from 'react-redux';
 
+import Component from '../../Component';
 import Home from './home/Home';
 import store from '../store';
 

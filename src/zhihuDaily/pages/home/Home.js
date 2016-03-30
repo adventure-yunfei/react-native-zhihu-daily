@@ -195,6 +195,6 @@ const styles = StyleSheet.create({
         flex: 1,
         alignSelf: 'center',
         paddingLeft: 20,
-        color: colors.Dark
+        color: colors.TextDefault
     }
 });

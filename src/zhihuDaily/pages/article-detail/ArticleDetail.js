@@ -1,15 +1,22 @@
 import React, {
     PropTypes,
-    Component,
     View,
+    Text,
     WebView,
+    Image,
+    TouchableHighlight,
+    Navigator,
     StyleSheet
 } from 'react-native';
 import immutable from 'immutable';
 import {connect} from 'react-redux';
 import Spinner from 'react-native-material-kit/lib/mdl/Spinner';
+import Color from 'color';
 
+import Component from '../../../Component';
+import Comments from '../comments/Comments';
 import * as actions from './actions';
+import * as colors from '../../../colors';
 import {STATUS_BAR_HEIGHT} from '../../../variables';
 
 const getStyleLinkNode = href => `<link rel="stylesheet" href="${href}"/>`;
@@ -18,14 +25,27 @@ const getJSNode = src => `<script type="text/javascript" src="${src}"></script>`
 class ArticleDetail extends Component {
     static propTypes = {
         articleId: PropTypes.number.isRequired,
-        article: PropTypes.instanceOf(immutable.Map),
-        dispatch: PropTypes.func.isRequired
+        content: PropTypes.instanceOf(immutable.Map),
+        extra: PropTypes.instanceOf(immutable.Map),
+        comments: PropTypes.instanceOf(immutable.List),
+        dispatch: PropTypes.func.isRequired,
+        navigator: PropTypes.instanceOf(Navigator).isRequired
+    };
+
+    jumpToComment = () => {
+        const {articleId, navigator} = this.props;
+        navigator.push({
+            component: Comments,
+            props: {
+                articleId
+            }
+        });
     };
 
     componentWillMount() {
-        this.props.dispatch(
-            actions.getArticle(this.props.articleId)
-        );
+        const {dispatch, articleId} = this.props;
+        dispatch(actions.getArticle(articleId));
+        dispatch(actions.getArticleExtra(articleId));
     }
 
     componentWillUnmount() {
@@ -33,27 +53,40 @@ class ArticleDetail extends Component {
     }
 
     render() {
-        const {article} = this.props,
+        const {content, extra} = this.props,
             renderContent = () => {
                 const html =
-                    (article.get('css') || immutable.List()).map(getStyleLinkNode).join('')
-                    + `<style>.headline .img-place-holder { background-image: url(${article.get('image')}); background-size: 100% auto; background-repeat: no-repeat; background-position: center;}</style>`
-                    + article.get('body')
-                    + (article.get('js') || immutable.List()).map(getJSNode).join('');
+                    (content.get('css') || immutable.List()).map(getStyleLinkNode).join('')
+                    + `<style>.headline .img-place-holder { background-image: url(${content.get('image')}); background-size: 100% auto; background-repeat: no-repeat; background-position: center;}</style>`
+                    + content.get('body')
+                    + (content.get('js') || immutable.List()).map(getJSNode).join('');
 
                 return <WebView source={{html: html}}/>;
             };
 
         return (
             <View style={styles.page}>
-                {article ? renderContent() : <Spinner style={styles.spinner}/>}
+                {content ? renderContent() : <Spinner style={styles.spinner}/>}
+
+                <View style={{flexDirection: 'row', backgroundColor: '#fff', justifyContent: 'flex-end', height: 25}}>
+                    <TouchableHighlight onPress={this.jumpToComment}
+                                        underlayColor={Color(colors.Grey).alpha(0.1).rgbaString()}
+                                        style={{marginRight: 16}}>
+                        <View style={{width: 50, flexDirection: 'row', alignItems: 'center'}}>
+                            <Image source={require('./images/ic_comment.png')} style={{opacity: 0.6}}/>
+                            <Text style={{flex: 1, textAlign: 'center', color: colors.TextDefault}}>{extra && extra.get('comments')}</Text>
+                        </View>
+                    </TouchableHighlight>
+                </View>
             </View>
         );
     }
 }
 
 export default connect(state => ({
-    article: state.get('article')
+    content: state.getIn(['article', 'content']),
+    extra: state.getIn(['article', 'extra']),
+    comments: state.getIn(['article', 'comments'])
 }))(ArticleDetail);
 
 const styles = StyleSheet.create({
