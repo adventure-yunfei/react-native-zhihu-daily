@@ -61,7 +61,7 @@ class Comments extends Component {
                         <View style={STYLES.flex_1}>
                             <Text style={styles.commentAuthorText}>{comment.get('author')}</Text>
                             <Text style={styles.commentContentText}>{comment.get('content')}</Text>
-                            <Text style={styles.commentTimeText}>{formatDate(new Date(comment.get('time')), 'MM-dd HH:mm')}</Text>
+                            <Text style={styles.commentTimeText}>{formatDate(new Date(comment.get('time') * 1000), 'MM-dd HH:mm')}</Text>
                         </View>
                     </View>
                 );
@@ -71,7 +71,7 @@ class Comments extends Component {
             <View style={styles.listViewContainer}>
                 <ListView
                     dataSource={dataSource}
-                    renderHeader={() => <View style={styles.listViewHead}><Text>{extra && extra.get('comments')} 条评论</Text></View>}
+                    renderHeader={() => <View style={styles.listViewHead}><Text>{extra && (extra.get('comments') + ' 条评论')}</Text></View>}
                     renderRow={renderRow}
                     style={STYLES.flex_1}
                 />
