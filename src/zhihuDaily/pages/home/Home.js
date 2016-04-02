@@ -171,7 +171,10 @@ const styles = StyleSheet.create({
     sectionHeader: {
         color: colors.White,
         backgroundColor: colors.Blue,
-        textAlign: 'center'
+        textAlign: 'center',
+        fontWeight: 'bold',
+        paddingTop: 5,
+        paddingBottom: 5
     },
 
     newsWrapper: {
@@ -189,12 +192,17 @@ const styles = StyleSheet.create({
         ...theme.cardImageStyle,
         flex: 0,
         height: 40,
-        width: 60
+        width: 60,
+        borderRadius: 1
+    },
+    newsTextWrapper: {
+        flex: 1
     },
     newsText: {
         flex: 1,
         alignSelf: 'center',
         paddingLeft: 20,
+        fontWeight: 'bold',
         color: colors.TextDefault
     }
 });

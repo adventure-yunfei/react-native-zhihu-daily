@@ -14,6 +14,7 @@ import Spinner from 'react-native-material-kit/lib/mdl/Spinner';
 import Color from 'color';
 
 import Component from '../../../Component';
+import {GalleryHeight} from '../home/TopArticlesGallery';
 import Comments from '../comments/Comments';
 import * as actions from './actions';
 import * as colors from '../../../colors';
@@ -57,7 +58,10 @@ class ArticleDetail extends Component {
             renderContent = () => {
                 const html =
                     (content.get('css') || immutable.List()).map(getStyleLinkNode).join('')
-                    + `<style>.headline .img-place-holder { background-image: url(${content.get('image')}); background-size: 100% auto; background-repeat: no-repeat; background-position: center;}</style>`
+                    + `<style>.headline .img-place-holder { height: ${GalleryHeight}px; background-image: url(${content.get('image')}); background-size: 100% auto; background-repeat: no-repeat; background-position: center;}</style>`
+                    // 滚动超出图片时, 显示白色条遮住状态栏
+                    + `<div id="status-bar" style="position: fixed; top: 0; width: 100%; height: ${STATUS_BAR_HEIGHT}; background-color: #fff; opacity: 0;"></div>`
+                    + `<script>window.addEventListener("scroll", function () { document.querySelector("#status-bar").style.opacity = window.scrollY > ${GalleryHeight} ? 1 : 0; });</script>`
                     + content.get('body')
                     + (content.get('js') || immutable.List()).map(getJSNode).join('');
 
@@ -68,13 +72,13 @@ class ArticleDetail extends Component {
             <View style={styles.page}>
                 {content ? renderContent() : <Spinner style={styles.spinner}/>}
 
-                <View style={{flexDirection: 'row', backgroundColor: '#fff', justifyContent: 'flex-end', height: 25}}>
+                <View style={styles.tabBar}>
                     <TouchableHighlight onPress={this.jumpToComment}
                                         underlayColor={Color(colors.Grey).alpha(0.1).rgbaString()}
-                                        style={{marginRight: 16}}>
-                        <View style={{width: 50, flexDirection: 'row', alignItems: 'center'}}>
-                            <Image source={require('./images/ic_comment.png')} style={{opacity: 0.6}}/>
-                            <Text style={{flex: 1, textAlign: 'center', color: colors.TextDefault}}>{extra && extra.get('comments')}</Text>
+                                        style={styles.tabBarItemWrapper}>
+                        <View style={styles.tabBarItem}>
+                            <Image source={require('./images/ic_comment.png')} style={styles.tabBarItemImg}/>
+                            <Text style={styles.tabBarItemText}>{extra && extra.get('comments')}</Text>
                         </View>
                     </TouchableHighlight>
                 </View>
@@ -91,12 +95,34 @@ export default connect(state => ({
 
 const styles = StyleSheet.create({
     page: {
-        flex: 1,
-        paddingTop: STATUS_BAR_HEIGHT
+        flex: 1
     },
 
     spinner: {
         marginTop: 50,
         alignSelf: 'center'
+    },
+
+    tabBar: {
+        flexDirection: 'row',
+        backgroundColor: '#fff',
+        justifyContent: 'flex-end',
+        height: 25
+    },
+    tabBarItemWrapper: {
+        marginRight: 16
+    },
+    tabBarItem: {
+        width: 50,
+        flexDirection: 'row',
+        alignItems: 'center'
+    },
+    tabBarItemImg: {
+        opacity: 0.6
+    },
+    tabBarItemText: {
+        flex: 1,
+        textAlign: 'center',
+        color: colors.TextDefault
     }
 });

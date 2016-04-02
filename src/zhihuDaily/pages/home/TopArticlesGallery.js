@@ -2,19 +2,18 @@ import React, {
     PropTypes,
     StyleSheet,
     Text,
-    View,
     Image,
     TouchableWithoutFeedback
 } from 'react-native';
-import Color from 'color';
 import immutable from 'immutable';
 import Carousel from 'react-native-looped-carousel';
+import LinearGradient from 'react-native-linear-gradient';
 
 import Component from '../../../Component';
 import * as windowSize from '../../../lib/windowSize';
 import * as colors from '../../../colors';
 
-export const GalleryHeight = 150;
+export const GalleryHeight = 240;
 
 export default class TopArticlesGallery extends Component {
     static propTypes = {
@@ -31,10 +30,11 @@ export default class TopArticlesGallery extends Component {
                     const id = topArticle.get('id');
                     return (
                         <TouchableWithoutFeedback key={id} onPress={() => jumpToArticle(id)}>
-                            <View>
-                                <Image style={styles.topNewsImage} source={{uri: topArticle.get('image') || 'TODO_DEFAULT'}}/>
-                                <Text style={styles.topNewsText}>{topArticle.get('title')}</Text>
-                            </View>
+                            <Image style={styles.topNewsImage} source={{uri: topArticle.get('image') || 'TODO_DEFAULT'}}>
+                                <LinearGradient style={styles.topNewsTextGradient} colors={['rgba(0, 0, 0, 0)', 'rgba(0, 0, 0, 0.5)']}>
+                                    <Text style={styles.topNewsText}>{topArticle.get('title')}</Text>
+                                </LinearGradient>
+                            </Image>
                         </TouchableWithoutFeedback>
                     );
                 }).toJS()}
@@ -45,22 +45,28 @@ export default class TopArticlesGallery extends Component {
 
 const styles = StyleSheet.create({
     scrollContainer: {
-        height: GalleryHeight
+        height: GalleryHeight,
+        backgroundColor: '#eee'
     },
 
     topNewsImage: {
-        height: GalleryHeight
+        height: GalleryHeight,
+        justifyContent: 'flex-end'
+    },
+    topNewsTextGradient: {
+        height: 65
     },
     topNewsText: {
         position: 'absolute',
         bottom: 0,
         width: windowSize.width,
-        textAlign: 'center',
         paddingLeft: 40,
         paddingRight: 40,
         paddingTop: 5,
         paddingBottom: 10,
+        fontSize: 19,
+        lineHeight: 22,
         color: colors.White,
-        backgroundColor: Color(colors.Dark).alpha(0.3).rgbaString()
+        backgroundColor: 'transparent'
     }
 });
